@@ -5,6 +5,10 @@ const BIDDER_CODE = 'justpremium'
 const ENDPOINT_URL = getTopWindowLocation().protocol + '//pre.ads.justpremium.com/v/2.0/t/xhr'
 const pixels = []
 
+$$PREBID_GLOBAL$$.onEvent(() => {
+
+})
+
 export const spec = {
   code: BIDDER_CODE,
   time: 60000,
@@ -43,7 +47,7 @@ export const spec = {
       payload.gdpr_consent = {
         consent_string: bidderRequest.gdprConsent.consentString,
         consent_required: (typeof bidderRequest.gdprConsent.gdprApplies === 'boolean') ? bidderRequest.gdprConsent.gdprApplies : true
-      };
+      }
     }
 
     const payloadString = JSON.stringify(payload)
@@ -82,7 +86,7 @@ export const spec = {
     return bidResponses
   },
 
-  getUserSyncs: function getUserSyncs(syncOptions, responses, gdprConsent) {
+  getUserSyncs: function getUserSyncs (syncOptions, responses, gdprConsent) {
     let url = '//pre.ads.justpremium.com/v/1.0/t/sync'
     if (gdprConsent && (typeof gdprConsent.gdprApplies === 'boolean')) {
       url = url + '?consentString=' + encodeURIComponent(gdprConsent.consentString)
@@ -91,9 +95,12 @@ export const spec = {
       pixels.push({
         type: 'iframe',
         url: url
-      });
+      })
     }
     return pixels
+  },
+  onTimeout: function (timeoutData) {
+    console.log(arguments)
   }
 }
 
